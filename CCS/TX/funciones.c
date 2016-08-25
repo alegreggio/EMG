@@ -52,37 +52,50 @@ void conf_TA0(void)
 	TA0CTL  = TASSEL_2 + MC_1 + TACLR;	// SMCLK, upmode, TA0 interrupt ON
 	TACCTL0 = CCIE;
 }
-
+USI16B
 void nRF24L01_init(void)
 {
-	write(CONFIG, PWR_UP);
+	write(CONFIG, PWR_UP);		// nRF en modo standby
+	write(EN_AA, ENAA_P0);		//enable auto-ack
+	write(EN_RXADDR, ERX_P0);	//datapipe 0
+	write(SETUP_AW, 0x03);		//address width de 5 bytes (en el receptor deben se igual)
+	write(RF_CH, 0x05);			//configuramos la frecuencia en 2,405 GHz
+	write(RF_SETUP, RF_PWR1 + RF_PWR2 );	//0dBm y 2Mbps
 
 
 
 }
 
-uint8_t spi_transfer(uint8_t dato)
+uint16_t spi_transfer(uint16_t dato)
 {
-	USISRL = dato;
-	USICNT = 8;            // Start SPI transfer
+	USISR	= dato;
+	USICNT 	= 16 | USI16B;            // Start SPI transfer
 	while ( !(USICTL1 & USIIFG) );
-	return USISRL;
+	return USISR;
 }
+
 
 void write(uint8_t registro, uint8_t valor)
 {
 	uint8_t ret;
 	registro=registro | W_REGISTER;
 	CSN_EN;
-	ret = spi_transfer(registro);
+	spi_transfer(registro);
 	__delay_cycles(DELAY_CYCLES_5MS);
-	ret = spi_transfer(valor);
+	spi_transfer(valor);
 	CSN_DIS;
 }
 
-void read(void)
+uint8_t read(uint8_t registro)
 {
-
+	uint8_t ret;
+	registro=registro | R_REGISTER;
+	CSN_EN;
+	spi_transfer(registro);
+	__delay_cycles(DELAY_CYCLES_5MS);
+	ret = spi_transfer(NOP);
+	CSN_DIS;
+	return ret;
 }
 
 

@@ -87,6 +87,13 @@
 #define	RX_P_NO_1			BIT1
 #define	TX_FULL				BIT0
 
+// MNEMONIC REGISTRO RF_SETUP
+#define	PLL_LOCK			BIT4
+#define	RF_DR				BIT3
+#define	RF_PWR2				BIT2
+#define	RF_PWR1				BIT1
+#define	LNA_HCURR			BIT0
+
 //	MNEMONIC REGISTRO OBSERVE_TX
 #define	PLOS_CNT			BIT4
 #define	ARC_CNT				BIT0
