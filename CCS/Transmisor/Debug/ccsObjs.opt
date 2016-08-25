@@ -1,0 +1,1 @@
+"./NRF24L01.obj" "./UCB0_SPI.obj" "./funciones.obj" "./interrupciones.obj" "./main.obj" "../lnk_msp430g2231.cmd" -l"libc.a" 
