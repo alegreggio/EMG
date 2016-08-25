@@ -850,3 +850,9 @@ Caused by: java.lang.IllegalArgumentException:
 	at java.lang.reflect.Method.invoke(Unknown Source)
 	at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:55)
 	... 76 more
+
+!ENTRY org.eclipse.cdt.core 1 0 2016-08-25 09:31:13.746
+!MESSAGE Indexed 'TX' (2 sources, 8 headers) in 1,35 sec: 196 declarations; 648 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2016-08-25 09:31:14.843
+!MESSAGE Indexed 'TX' (2 sources, 8 headers) in 0,127 sec: 196 declarations; 649 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
