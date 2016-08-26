@@ -61,6 +61,7 @@
 #define	PWR_UP				BIT1
 #define	PRIM_RX				BIT0
 
+
 // MNEMONIC REGISTRO EN_AA
 #define	ENAA_P5				BIT5
 #define	ENAA_P4				BIT4

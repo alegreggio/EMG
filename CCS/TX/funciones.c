@@ -49,36 +49,38 @@ void conf_ADC10(void)
 void conf_TA0(void)
 {
 	TA0CCR0 = 36000;		                	// TAIFG on around ~ 3s
-	TA0CTL  = TASSEL_2 + MC_1 + TACLR;	// SMCLK, upmode, TA0 interrupt ON
+	TA0CTL  = TASSEL_2 + MC_1 + TACLR;			// SMCLK, upmode, TA0 interrupt ON
 	TACCTL0 = CCIE;
 }
-USI16B
+
 void nRF24L01_init(void)
 {
-	write(CONFIG, PWR_UP);		// nRF en modo standby
-	write(EN_AA, ENAA_P0);		//enable auto-ack
-	write(EN_RXADDR, ERX_P0);	//datapipe 0
-	write(SETUP_AW, 0x03);		//address width de 5 bytes (en el receptor deben se igual)
-	write(RF_CH, 0x05);			//configuramos la frecuencia en 2,405 GHz
-	write(RF_SETUP, RF_PWR1 + RF_PWR2 );	//0dBm y 2Mbps
+	set_status(EN_AA, ENAA_P0);					//enable auto-ack
+	set_status(EN_RXADDR, ERX_P0);				//datapipe 0
+	set_status(SETUP_AW, 0x03);					//address width de 5 bytes (en el receptor deben se igual)
+	set_status(RF_CH, 0x05);					//configuramos la frecuencia en 2,405 GHz
+	set_status(RF_SETUP, RF_PWR1 );				//0dBm y 2Mbps
+	set_status(RF_SETUP, RF_PWR2 );				//0dBm y 2Mbps
+
+	set_status(CONFIG, PWR_UP);					// nRF en modo standby
 
 
 
 }
 
-uint16_t spi_transfer(uint16_t dato)
+uint8_t spi_transfer(uint8_t dato)
 {
-	USISR	= dato;
-	USICNT 	= 16 | USI16B;            // Start SPI transfer
+	USISRL	= dato;
+	USICNT 	= 8;            // Start SPI transfer
 	while ( !(USICTL1 & USIIFG) );
-	return USISR;
+	return USISRL;
 }
 
 
-void write(uint8_t registro, uint8_t valor)
+void write_reg(uint8_t registro, uint8_t valor)
 {
 	uint8_t ret;
-	registro=registro | W_REGISTER;
+	registro = registro | W_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
 	__delay_cycles(DELAY_CYCLES_5MS);
@@ -86,10 +88,10 @@ void write(uint8_t registro, uint8_t valor)
 	CSN_DIS;
 }
 
-uint8_t read(uint8_t registro)
+uint8_t read_reg(uint8_t registro)
 {
 	uint8_t ret;
-	registro=registro | R_REGISTER;
+	registro = registro | R_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
 	__delay_cycles(DELAY_CYCLES_5MS);
@@ -98,7 +100,20 @@ uint8_t read(uint8_t registro)
 	return ret;
 }
 
+void set_status(uint8_t registro, uint8_t parametro)
+{
+	uint8_t estado;
+	estado = read_reg(registro);
+	//Logica de enmascaramiento
+	if ( ( parametro <= 0x80 ) && ( parametro != 0x7f ) ){
+		estado |= parametro;
+	}
+	else {
+		estado &= parametro;
+	}
 
+	write_reg(registro, estado);
+}
 
 
 
