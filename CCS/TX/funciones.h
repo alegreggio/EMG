@@ -20,6 +20,8 @@ void conf_ADC10(void);
 void conf_TA0(void);
 void nRF24L01_init(void);
 uint8_t spi_transfer(uint8_t dato);
+uint16_t spi_transfer16(uint16_t dato);
+void enviar_dato(uint16_t dato);
 void write(uint8_t registro, uint8_t valor);
 void read(void);
 

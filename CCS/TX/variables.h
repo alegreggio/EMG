@@ -8,6 +8,11 @@
 #ifndef VARIABLES_H_
 #define VARIABLES_H_
 
+//generales
+
+uint16_t i	= 0;
+uint16_t dato;
+
 
 //Settings for 1MHz MCLK.
 #define DELAY_CYCLES_5MS       	5000
