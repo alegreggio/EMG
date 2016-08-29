@@ -137,6 +137,7 @@
 #define W_ACK_PAYLOAD		0xA8	/**<  Rx: Payload +  AUTO ACK  */
 #define W_TX_PAYLOAD_NOACK	0xB0	/**<  Tx: Desactiva AUTO ACKL  */
 #define NOP					0xFF	/**<  Puede ser usado para leer registro STATUS */
+#define NOP16				0xFFFF
 
 
 #endif /* VARIABLES_H_ */

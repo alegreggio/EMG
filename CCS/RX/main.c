@@ -1,11 +1,13 @@
 #include <msp430.h> 
 #include "funciones.h"
+#include "variables.h"
 /*
  * main.c
  */
-int main(void) {
 
-	uint8_t dato;
+uint16_t dato;
+
+int main(void) {
 
 	conf_WDT      	();                // Configura WDT del sistema
 	conf_CLK      	();                // Configura CLK del sistema
@@ -15,13 +17,14 @@ int main(void) {
 	//P1OUT	^=	 BIT0;
 	while (1)
 	{
-		CE_HIGH;
+		CE_EN;
 		while (!RX_DR);
-		CE_LOW;
+		dato = 0x0000;
+		CE_DIS;
 		spi_transfer (R_RX_PAYLOAD);
-
-
-
+		dato = spi_transfer16 (NOP16);
+		//preguntar si hay mas en la FIFO
+		//RX_DR = 0; 					//Esta mal, hay que hacerlo con spi_transfer
 	}
 
 	

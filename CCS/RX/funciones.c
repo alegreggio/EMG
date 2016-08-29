@@ -8,6 +8,7 @@
 #include "funciones.h"
 #include "variables.h"
 
+uint8_t i = 0;
 
 void conf_WDT(void)
 {
@@ -63,11 +64,11 @@ void nRF24L01_init(void)
 	set_status(RF_CH, 0x05);					//configuramos la frecuencia en 2,405 GHz
 	set_status(RF_SETUP, RF_PWR1 );				//0dBm y 2Mbps
 	set_status(RF_SETUP, RF_PWR2 );				//0dBm y 2Mbps
-	uint8_t l_addr= 5 ;
-	uint8_t dir[l_addr] = 0;
-	for(i=1;i<l_addr;i++)
+	//static uint8_t l_addr = 5;				//Problemas con la declaración de l_addr y el vector dir
+	static uint8_t dir[5] = {0};
+	for(i=1; i<5; i++)
 	{
-		dir[i] = E7;
+		dir[i] = 0xE7;
 	}
 	set_dir(RX_ADDR_P0, *dir, 5);
 	set_status(CONFIG, PWR_UP);					// nRF en modo standby
@@ -81,7 +82,7 @@ void set_dir(uint8_t registro, uint8_t *valor, uint8_t len)
 	CSN_EN;
 	spi_transfer(registro);
 	__delay_cycles(DELAY_CYCLES_5MS);
-	for(int i=0; i<len; i++)
+	for(i=0; i<len; i++)
 	{
 		spi_transfer(valor[i]);
 	}
@@ -96,6 +97,13 @@ uint8_t spi_transfer(uint8_t dato)
 	return USISRL;
 }
 
+uint16_t spi_transfer16(uint16_t dato)
+{
+	USISR	= dato;
+	USICNT 	= 16 | USI16B;
+	while ( !(USICTL1 & USIIFG) );
+	return USISR;
+}
 
 void write_reg(uint8_t registro, uint8_t valor)
 {
