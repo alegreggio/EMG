@@ -18,13 +18,13 @@ int main(void) {
 	while (1)
 	{
 		CE_EN;
-		while (!RX_DR);
+		while (!flag_RX());
 		dato = 0x0000;
 		CE_DIS;
 		spi_transfer (R_RX_PAYLOAD);
 		dato = spi_transfer16 (NOP16);
 		//preguntar si hay mas en la FIFO
-		//RX_DR = 0; 					//Esta mal, hay que hacerlo con spi_transfer
+		set_status (CONFIG , ~MASK_RX_DR);
 	}
 
 	

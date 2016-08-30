@@ -26,6 +26,7 @@ uint16_t spi_transfer16(uint16_t dato);
 void write_reg(uint8_t registro, uint8_t valor);
 uint8_t read_reg(uint8_t registro);
 void set_status(uint8_t registro, uint8_t parametro);
+uint8_t flag_RX(void);
 
 
 #endif /* FUNCIONES_H_ */

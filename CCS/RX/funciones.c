@@ -143,7 +143,13 @@ void set_status(uint8_t registro, uint8_t parametro)
 	write_reg(registro, estado);
 }
 
-
+uint8_t flag_RX(void)
+{
+	uint8_t ret;
+	ret = read_reg(CONFIG);
+	ret = ret & MASK_RX_DR;
+	return ret;
+}
 
 
 
