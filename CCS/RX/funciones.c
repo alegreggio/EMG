@@ -70,7 +70,7 @@ void nRF24L01_init(void)
 	{
 		dir[i] = 0xE7;
 	}
-	set_dir(RX_ADDR_P0, *dir, 5);
+	set_dir(RX_ADDR_P0, dir, 5);
 	set_status(CONFIG, PWR_UP);					// nRF en modo standby
 
 }
@@ -107,7 +107,7 @@ uint16_t spi_transfer16(uint16_t dato)
 
 void write_reg(uint8_t registro, uint8_t valor)
 {
-	uint8_t ret;
+	//uint8_t ret;
 	registro = registro | W_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
@@ -146,8 +146,8 @@ void set_status(uint8_t registro, uint8_t parametro)
 uint8_t flag_RX(void)
 {
 	uint8_t ret;
-	ret = read_reg(CONFIG);
-	ret = ret & MASK_RX_DR;
+	ret = read_reg(STATUS);
+	ret = ret & RX_DR;
 	return ret;
 }
 

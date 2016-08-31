@@ -7,7 +7,7 @@
 
 uint16_t dato;
 
-int main(void) {
+void main(void) {
 
 	conf_WDT      	();                // Configura WDT del sistema
 	conf_CLK      	();                // Configura CLK del sistema
@@ -23,10 +23,10 @@ int main(void) {
 		CE_DIS;
 		spi_transfer (R_RX_PAYLOAD);
 		dato = spi_transfer16 (NOP16);
-		//preguntar si hay mas en la FIFO
-		set_status (CONFIG , ~MASK_RX_DR);
+		//preguntar si hay mas en la FIFO?
+		set_status (STATUS , ~RX_DR);
+		P1OUT	^=	 BIT0;
 	}
 
 	
-	return 0;
 }
