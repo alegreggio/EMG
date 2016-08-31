@@ -10,7 +10,7 @@
 
 //generales
 
-uint16_t i	= 0;
+uint8_t i	= 0;
 uint16_t dato;
 
 

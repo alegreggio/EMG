@@ -28,6 +28,4 @@ int main(void) {
 		TA0CTL  = TASSEL_1 + MC_1 + TACLR + TAIE;
 		__bis_SR_register(LPM3_bits + GIE);
 	}
-
-	return 0;
 }

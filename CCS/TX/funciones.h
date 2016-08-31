@@ -22,8 +22,10 @@ void nRF24L01_init(void);
 uint8_t spi_transfer(uint8_t dato);
 uint16_t spi_transfer16(uint16_t dato);
 void enviar_dato(uint16_t dato);
-void write(uint8_t registro, uint8_t valor);
-void read(void);
+void write_reg(uint8_t registro, uint8_t valor);
+uint8_t read_reg(uint8_t registro);
+void set_status(uint8_t registro, uint8_t parametro);
+void set_dir(uint8_t registro, uint8_t *valor, uint8_t len);
 
 
 #endif /* FUNCIONES_H_ */

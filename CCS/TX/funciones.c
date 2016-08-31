@@ -26,6 +26,7 @@ void conf_IO(void)
 	P1SEL  	&= 	~(BIT0 + BIT1 + BIT2 + BIT3 + BIT4 + BIT5 + BIT6 + BIT7); //con un 0 en el bit configuro el pin como GPIO
 	P1DIR	|=  BIT0 + BIT1 + BIT2 + BIT5 + BIT6; //los demas como entrada (0)
 	P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
+	P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
 	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado
 }
@@ -61,13 +62,14 @@ void nRF24L01_init(void)
 	set_status(RF_CH, 0x05);					//configuramos la frecuencia en 2,405 GHz
 	set_status(RF_SETUP, RF_PWR1 );				//0dBm y 2Mbps
 	set_status(RF_SETUP, RF_PWR2 );				//0dBm y 2Mbps
-	uint8_t l_addr = 5 ;
-	static uint8_t dir [l_addr] = {0};
-	for( i=0 ; i<l_addr ; i++)
+	static uint8_t dir [5] = {0};
+	for( i=0 ; i<5 ; i++)
 	{
 		dir[i] = 0xE7;
 	}
-	set_dir(TX_ADDR, *dir, 5);
+	set_dir(TX_ADDR, dir, 5);
+	set_status(CONFIG, ~MASK_MAX_RT);			//activo la interrupcion por max envios, interrupcion activa por bajo
+	set_status(CONFIG, ~MASK_TX_DS);			//activo la interrupcion por envio de paquete, interrupcion activa por bajo
 	set_status(CONFIG, PWR_UP);					// nRF en modo standby
 
 }
@@ -104,7 +106,6 @@ uint16_t spi_transfer16(uint16_t dato)
 
 void write_reg(uint8_t registro, uint8_t valor)
 {
-	uint8_t ret;
 	registro = registro | W_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
@@ -142,12 +143,19 @@ void set_status(uint8_t registro, uint8_t parametro)
 
 void enviar_dato(uint16_t dato)
 {
+	uint8_t status;
 	spi_transfer(W_TX_PAYLOAD);
-	spi_tansfer16(dato);
+	spi_transfer16(dato);
 	CE_EN;
 	__delay_cycles(DELAY_CYCLES_15US);
 	CE_DIS;
-	while(!TX_DS | MAX_RT);
+	__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS o MAX_TX_DS
+	status = read_reg(STATUS);
+	if(status & TX_DS) {
+		set_status(STATUS, ~TX_DS); // se envió el paquete.
+	} else {
+		set_status(STATUS, ~MAX_RT); //aca se puede avisar o contar que no se envió el paquete, o algo.
+	}
 }
 
 //Timer A0 interrupt service routine
@@ -157,6 +165,12 @@ __interrupt void Timer_A (void)
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
 }
 
+//Port 1.3 interrupt service routine
+#pragma vector=PORT1_VECTOR
+__interrupt void Port_1 (void)
+{
+	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+}
 
 
 
