@@ -9,6 +9,9 @@
 #include "variables.h"
 
 
+uint8_t i	= 0;
+
+
 void conf_WDT(void)
 {
 	WDTCTL = WDTPW + WDTHOLD; // Stop watchdog timer
@@ -29,12 +32,14 @@ void conf_IO(void)
 	P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
 	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado
+	P1OUT	&=	~BIT0;
+
 }
 
 void conf_USI(void)
 {
 	USICTL0		= USIPE5 + USIMST + USIOE + USISWRST + USIPE6 + USIPE7;
-	USICTL1 	= USICKPH + USIIE;
+	USICTL1 	= USICKPH;// + USIIE;
 	USICKCTL 	= USIDIV_0 + USISSEL_2;
 	USISR		= 0x0000;
 
@@ -49,8 +54,8 @@ void conf_ADC10(void)
 
 void conf_TA0(void)
 {
-	TA0CCR0 = 36000;		                	// TAIFG on around ~ 3s
-	TA0CTL  = TASSEL_2 + MC_1 + TACLR;			// SMCLK, upmode, TA0 interrupt ON
+	TA0CCR0 = 3000;		                	// TAIFG on around ~ 3s
+	TA0CTL  = TASSEL_1 + MC_1 + TACLR;		// SMCLK, upmode, TA0 interrupt ON
 	TACCTL0 = CCIE;
 }
 
@@ -158,21 +163,26 @@ void enviar_dato(uint16_t dato)
 	}
 }
 
-//Timer A0 interrupt service routine
-#pragma vector=TIMERA0_VECTOR
-__interrupt void Timer_A (void)
+/*/Timer A0 interrupt service routine
+//#pragma vector=TIMERA0_VECTOR
+void Timer_A (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	P1OUT	^=	 BIT0;
+
 }
 
 //Port 1.3 interrupt service routine
-#pragma vector=PORT1_VECTOR
-__interrupt void Port_1 (void)
+//#pragma vector=PORT1_VECTOR
+void Port_1 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
 }
 
-
-
-
-
+//ADC interrupt service routine
+//#pragma vector=ADC10_VECTOR
+void ADC10 (void)
+{
+	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+}
+*/

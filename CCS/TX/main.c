@@ -1,11 +1,12 @@
 #include <msp430.h> 
+#include <stdint.h>
 #include "funciones.h"
 #include "variables.h"
 
 /*
  * main.c
  */
-int main(void) {
+void main(void) {
 
 	conf_WDT      	();                // Configura WDT del sistema
 	conf_CLK      	();                // Configura CLK del sistema
@@ -15,17 +16,50 @@ int main(void) {
 	conf_ADC10 		();				   // Configura ADC10 ( P1.4 como entrada )
 	conf_TA0		();				   // Configura TimerA TA0
 
-	__bis_SR_register(LPM3_bits + GIE);
+	__enable_interrupt();
 
 	while (1)
 	{
+		//P1OUT	^=	 BIT0;
+		__bis_SR_register(LPM3_bits + GIE);
+
 		ADC10CTL0 |= ENC + ADC10SC; // Sampling and conversion start
-	    while(!ADC10IFG);
+		__bis_SR_register(LPM3_bits + GIE);
+
 		dato = ADC10MEM;
 		enviar_dato(dato);
 
-		TA0CCR0 = 36000;
-		TA0CTL  = TASSEL_1 + MC_1 + TACLR + TAIE;
-		__bis_SR_register(LPM3_bits + GIE);
+		TA0CCR0 = 3000;
+		TA0CTL  = TASSEL_1 + MC_1 + TACLR;
+		TACCTL0 = CCIE;
+
 	}
+}
+
+
+
+//Timer A0 interrupt service routine
+#pragma vector=TIMERA0_VECTOR
+__interrupt void Timer_A (void)
+{
+	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	//P1OUT	^=	 BIT0;
+
+}
+
+//Port 1.3 interrupt service routine
+#pragma vector=PORT1_VECTOR
+__interrupt void Port_1 (void)
+{
+	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
+	//P1OUT	^=	 BIT0;
+}
+
+//ADC interrupt service routine
+#pragma vector=ADC10_VECTOR
+__interrupt void ADC10 (void)
+{
+	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	P1OUT	^=	 BIT0;
 }

@@ -28,4 +28,10 @@ void set_status(uint8_t registro, uint8_t parametro);
 void set_dir(uint8_t registro, uint8_t *valor, uint8_t len);
 
 
+
+//void Timer_A(void) 		__attribute__((interrupt(TIMERA0_VECTOR)));
+//void Port_1(void) 		__attribute__((interrupt(PORT1_VECTOR)));
+//void ADC10(void) 		__attribute__((interrupt(ADC10_VECTOR)));
+
+
 #endif /* FUNCIONES_H_ */
