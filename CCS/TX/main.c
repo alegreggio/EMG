@@ -53,7 +53,7 @@ __interrupt void Port_1 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
-	//P1OUT	^=	 BIT0;
+	P1OUT	^=	 BIT0;
 }
 
 //ADC interrupt service routine
@@ -61,5 +61,5 @@ __interrupt void Port_1 (void)
 __interrupt void ADC10 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
-	P1OUT	^=	 BIT0;
+	//P1OUT	^=	 BIT0;
 }

@@ -39,9 +39,11 @@ void conf_IO(void)
 void conf_USI(void)
 {
 	USICTL0		= USIPE5 + USIMST + USIOE + USISWRST + USIPE6 + USIPE7;
-	USICTL1 	= USICKPH;// + USIIE;
+	USICTL1 	= USICKPH + USIIE;
 	USICKCTL 	= USIDIV_0 + USISSEL_2;
 	USISR		= 0x0000;
+	USICTL0 	&= ~USISWRST;
+	USICTL1 	&= ~USIIFG;
 
 }
 
@@ -98,6 +100,7 @@ uint8_t spi_transfer(uint8_t dato)
 	USISRL	= dato;
 	USICNT 	= 8;            // Start SPI transfer
 	while ( !(USICTL1 & USIIFG) );
+	USICTL1 &= ~USIIFG;
 	return USISRL;
 }
 
@@ -106,6 +109,7 @@ uint16_t spi_transfer16(uint16_t dato)
 	USISR	= dato;
 	USICNT 	= 16 | USI16B;
 	while ( !(USICTL1 & USIIFG) );
+	USICTL1 &= ~USIIFG;
 	return USISR;
 }
 
