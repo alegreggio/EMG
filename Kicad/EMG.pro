@@ -1,4 +1,4 @@
-update=28/06/2016 07:39:57 p.m.
+update=11/09/2016 11:38:24 a.m.
 version=1
 last_client=kicad
 [pcbnew]
@@ -28,3 +28,8 @@ version=1
 [eeschema]
 version=1
 LibDir=libs
+[eeschema/libraries]
+LibName1=libs/conn
+LibName2=libs/device
+LibName3=libs/Gajda_amplif
+LibName4=libs/opa4243
