@@ -20,8 +20,8 @@ void main(void) {
 
 	while (1)
 	{
-		//P1OUT	^=	 BIT0;
 		__bis_SR_register(LPM3_bits + GIE);
+
 
 		ADC10CTL0 |= ENC + ADC10SC; // Sampling and conversion start
 		__bis_SR_register(LPM3_bits + GIE);
@@ -29,7 +29,7 @@ void main(void) {
 		dato = ADC10MEM;
 		enviar_dato(dato);
 
-		TA0CCR0 = 3000;
+		TA0CCR0 = 10000;
 		TA0CTL  = TASSEL_1 + MC_1 + TACLR;
 		TACCTL0 = CCIE;
 
@@ -53,7 +53,7 @@ __interrupt void Port_1 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
-	P1OUT	^=	 BIT0;
+	//P1OUT	^=	 BIT0;
 }
 
 //ADC interrupt service routine
@@ -61,5 +61,6 @@ __interrupt void Port_1 (void)
 __interrupt void ADC10 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	ADC10CTL0 = SREF_0 + ADC10SHT_3 + ADC10ON + ADC10IE; //Vcc & Vss as reference
 	//P1OUT	^=	 BIT0;
 }

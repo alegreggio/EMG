@@ -56,7 +56,7 @@ void conf_ADC10(void)
 
 void conf_TA0(void)
 {
-	TA0CCR0 = 3000;		                	// TAIFG on around ~ 3s
+	TA0CCR0 = 10000;		                	// TAIFG on around ~ 3s
 	TA0CTL  = TASSEL_1 + MC_1 + TACLR;		// SMCLK, upmode, TA0 interrupt ON
 	TACCTL0 = CCIE;
 }
@@ -87,7 +87,7 @@ void set_dir(uint8_t registro, uint8_t *valor, uint8_t len)
 	registro = registro | W_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
-	__delay_cycles(DELAY_CYCLES_5MS);
+	__delay_cycles(DELAY_CYCLES_15US);
 	for( i=0 ; i<len ; i++)
 	{
 		spi_transfer(valor[i]);
@@ -118,7 +118,7 @@ void write_reg(uint8_t registro, uint8_t valor)
 	registro = registro | W_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
-	__delay_cycles(DELAY_CYCLES_5MS);
+	__delay_cycles(DELAY_CYCLES_15US);
 	spi_transfer(valor);
 	CSN_DIS;
 }
@@ -129,7 +129,7 @@ uint8_t read_reg(uint8_t registro)
 	registro = registro | R_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
-	__delay_cycles(DELAY_CYCLES_5MS);
+	__delay_cycles(DELAY_CYCLES_15US);
 	ret = spi_transfer(NOP);
 	CSN_DIS;
 	return ret;
@@ -161,9 +161,9 @@ void enviar_dato(uint16_t dato)
 	__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS o MAX_TX_DS
 	status = read_reg(STATUS);
 	if(status & TX_DS) {
-		set_status(STATUS, ~TX_DS); // se envió el paquete.
+		set_status(STATUS, TX_DS); // se envió el paquete.
 	} else {
-		set_status(STATUS, ~MAX_RT); //aca se puede avisar o contar que no se envió el paquete, o algo.
+		set_status(STATUS, MAX_RT); //aca se puede avisar o contar que no se envió el paquete, o algo.
 	}
 }
 
