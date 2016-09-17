@@ -10,7 +10,7 @@
 
 //generales
 
-uint16_t dato;
+uint16_t dat;
 
 
 //Settings for 1MHz MCLK.

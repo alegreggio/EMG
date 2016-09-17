@@ -26,8 +26,9 @@ void main(void) {
 		ADC10CTL0 |= ENC + ADC10SC; // Sampling and conversion start
 		__bis_SR_register(LPM3_bits + GIE);
 
-		dato = ADC10MEM;
-		enviar_dato(dato);
+		dat = ADC10MEM;
+		P1OUT	^=	 BIT4;
+		enviar_dato(dat);
 
 		TA0CCR0 = 10000;
 		TA0CTL  = TASSEL_1 + MC_1 + TACLR;
@@ -43,24 +44,24 @@ void main(void) {
 __interrupt void Timer_A (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
-	//P1OUT	^=	 BIT0;
+	//P1OUT	^=	 BIT4;
 
 }
 
-//Port 1.3 interrupt service routine
+/*/Port 1.3 interrupt service routine
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
-	//P1OUT	^=	 BIT0;
+	//P1OUT	^=	 BIT4;
 }
-
+*/
 //ADC interrupt service routine
 #pragma vector=ADC10_VECTOR
 __interrupt void ADC10 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
 	ADC10CTL0 = SREF_0 + ADC10SHT_3 + ADC10ON + ADC10IE; //Vcc & Vss as reference
-	//P1OUT	^=	 BIT0;
+	//P1OUT	^=	 BIT4;
 }

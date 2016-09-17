@@ -26,14 +26,14 @@ void conf_CLK(void)
 
 void conf_IO(void)
 {
-	P1SEL  	&= 	~(BIT0 + BIT1 + BIT2 + BIT3 + BIT4 + BIT5 + BIT6 + BIT7); //con un 0 en el bit configuro el pin como GPIO
-	P1DIR	|=  BIT0 + BIT1 + BIT2 + BIT5 + BIT6; //los demas como entrada (0)
+	P1SEL  	&= 	~(BIT1 + BIT2 + BIT3 + BIT4 + BIT5 + BIT6 + BIT7); //con un 0 en el bit configuro el pin como GPIO
+	P1DIR	|=  BIT1 + BIT2 + BIT4 + BIT5 + BIT6; //los demas como entrada (0)
 	P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
 	P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
 	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado
-	P1OUT	&=	~BIT0;
-
+	P1OUT	&=	~BIT4;
+	P1SEL	|=	BIT0;
 }
 
 void conf_USI(void)
@@ -51,7 +51,7 @@ void conf_ADC10(void)
 {
 	ADC10CTL1 = INCH_0 + ADC10DIV_0 + ADC10SSEL1 ; // Channel 0, ADC10CLK = MCLK
 	ADC10CTL0 = SREF_0 + ADC10SHT_3 + ADC10ON + ADC10IE; //Vcc & Vss as reference
-	ADC10AE0 |= BIT4; //P1.4 ADC option
+	ADC10AE0 |= BIT0; //P1.0 ADC option
 }
 
 void conf_TA0(void)
@@ -150,11 +150,13 @@ void set_status(uint8_t registro, uint8_t parametro)
 	write_reg(registro, estado);
 }
 
-void enviar_dato(uint16_t dato)
+void enviar_dato(uint16_t dat)
 {
 	uint8_t status;
+	CSN_EN;
 	spi_transfer(W_TX_PAYLOAD);
-	spi_transfer16(dato);
+	spi_transfer16(dat);
+	CSN_DIS;
 	CE_EN;
 	__delay_cycles(DELAY_CYCLES_15US);
 	CE_DIS;
@@ -167,26 +169,12 @@ void enviar_dato(uint16_t dato)
 	}
 }
 
-/*/Timer A0 interrupt service routine
-//#pragma vector=TIMERA0_VECTOR
-void Timer_A (void)
-{
-	_BIC_SR(LPM3_EXIT); // despierta del LPM3
-	P1OUT	^=	 BIT0;
-
-}
-
 //Port 1.3 interrupt service routine
-//#pragma vector=PORT1_VECTOR
-void Port_1 (void)
+#pragma vector=PORT1_VECTOR
+__interrupt void Port_1 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
+	P1OUT	^=	 BIT4;
 }
 
-//ADC interrupt service routine
-//#pragma vector=ADC10_VECTOR
-void ADC10 (void)
-{
-	_BIC_SR(LPM3_EXIT); // despierta del LPM3
-}
-*/
