@@ -1,4 +1,4 @@
-update=12/09/2016 07:16:24 p.m.
+update=16/09/2016 08:40:21 p.m.
 version=1
 last_client=kicad
 [pcbnew]
@@ -34,3 +34,4 @@ LibName2=libs/device
 LibName3=libs/Gajda_amplif
 LibName4=libs/opa4243
 LibName5=libs/tlc2274
+LibName6=libs/power
