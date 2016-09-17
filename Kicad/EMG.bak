@@ -4,12 +4,24 @@ LIBS:device
 LIBS:Gajda_amplif
 LIBS:opa4243
 LIBS:tlc2274
+LIBS:power
+LIBS:msp430
+LIBS:nrf24l01
+LIBS:bat
+LIBS:batn
+LIBS:microchip
+LIBS:nordicsemi
+LIBS:Power_Management
+LIBS:powerint
+LIBS:references
+LIBS:rfcom
+LIBS:texas
 LIBS:EMG-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 1
+Sheet 1 7
 Title ""
 Date ""
 Rev ""
@@ -19,48 +31,71 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-$Comp
-L TLC2274 U?
-U 1 1 57D7298D
-P 2350 1900
-F 0 "U?" H 2500 2100 60  0000 C CNN
-F 1 "TLC2274" H 2600 1700 60  0000 C CNN
-F 2 "" H 2350 1900 60  0000 C CNN
-F 3 "" H 2350 1900 60  0000 C CNN
-	1    2350 1900
-	1    0    0    -1  
-$EndComp
-$Comp
-L TLC2274 U?
-U 2 1 57D729BC
-P 2350 3200
-F 0 "U?" H 2500 3400 60  0000 C CNN
-F 1 "TLC2274" H 2600 3000 60  0000 C CNN
-F 2 "" H 2350 3200 60  0000 C CNN
-F 3 "" H 2350 3200 60  0000 C CNN
-	2    2350 3200
-	1    0    0    -1  
-$EndComp
-$Comp
-L TLC2274 U?
-U 3 1 57D729DF
-P 4400 1900
-F 0 "U?" H 4550 2100 60  0000 C CNN
-F 1 "TLC2274" H 4650 1700 60  0000 C CNN
-F 2 "" H 4400 1900 60  0000 C CNN
-F 3 "" H 4400 1900 60  0000 C CNN
-	3    4400 1900
-	1    0    0    -1  
-$EndComp
-$Comp
-L TLC2274 U?
-U 4 1 57D72A66
-P 4400 3200
-F 0 "U?" H 4550 3400 60  0000 C CNN
-F 1 "TLC2274" H 4650 3000 60  0000 C CNN
-F 2 "" H 4400 3200 60  0000 C CNN
-F 3 "" H 4400 3200 60  0000 C CNN
-	4    4400 3200
-	1    0    0    -1  
-$EndComp
+$Sheet
+S 2900 1000 1800 2200
+U 57DD5359
+F0 "Adquisición" 60
+F1 "Adquisición.sch" 60
+F2 "E1" I L 2900 1350 60 
+F3 "E2" I L 2900 1700 60 
+F4 "DRL" I L 2900 2100 60 
+F5 "Vout" I R 4700 1800 60 
+$EndSheet
+$Sheet
+S 5550 1200 1400 1350
+U 57DD8947
+F0 "Microcontrolador" 60
+F1 "Microcontrolador.sch" 60
+F2 "ADCin" I L 5550 1800 60 
+F3 "CE" I R 6950 1450 60 
+F4 "CSN" I R 6950 1550 60 
+F5 "IRQ" I R 6950 1650 60 
+F6 "SCK" I R 6950 1750 60 
+F7 "MOSI" I R 6950 1850 60 
+F8 "MISO" I R 6950 1950 60 
+$EndSheet
+$Sheet
+S 8150 1200 1550 1350
+U 57DD8FD2
+F0 "RF" 60
+F1 "RF.sch" 60
+F2 "CE" I L 8150 1450 60 
+F3 "SCK" I L 8150 1750 60 
+F4 "MISO" I L 8150 1950 60 
+F5 "IRQ" I L 8150 1650 60 
+F6 "MOSI" I L 8150 1850 60 
+F7 "CSN" I L 8150 1550 60 
+$EndSheet
+Wire Wire Line
+	6950 1450 8150 1450
+Wire Wire Line
+	6950 1550 8150 1550
+Wire Wire Line
+	6950 1650 8150 1650
+Wire Wire Line
+	6950 1750 8150 1750
+Wire Wire Line
+	6950 1850 8150 1850
+Wire Wire Line
+	6950 1950 8150 1950
+Wire Wire Line
+	4700 1800 5550 1800
+$Sheet
+S 2550 4150 1500 1300
+U 57DDA572
+F0 "DC/DC" 60
+F1 "DC/DC.sch" 60
+$EndSheet
+$Sheet
+S 5100 4150 1700 1300
+U 57DDA5A8
+F0 "Bateria" 60
+F1 "Bateria.sch" 60
+$EndSheet
+$Sheet
+S 7750 4150 1700 1350
+U 57DDA5DE
+F0 "Cargador" 60
+F1 "Cargador.sch" 60
+$EndSheet
 $EndSCHEMATC

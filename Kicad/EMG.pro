@@ -1,4 +1,4 @@
-update=16/09/2016 08:40:21 p.m.
+update=17/09/2016 03:45:33 p.m.
 version=1
 last_client=kicad
 [pcbnew]
@@ -32,6 +32,9 @@ LibDir=libs
 LibName1=libs/conn
 LibName2=libs/device
 LibName3=libs/Gajda_amplif
-LibName4=libs/opa4243
-LibName5=libs/tlc2274
-LibName6=libs/power
+LibName4=libs/tlc2274
+LibName5=libs/power
+LibName6=libs/msp430
+LibName7=libs/nrf24l01
+LibName8=libs/bat
+LibName9=libs/batn
