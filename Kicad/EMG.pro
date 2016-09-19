@@ -1,4 +1,4 @@
-update=17/09/2016 03:45:33 p.m.
+update=19/9/2016 7:39:38 p. m.
 version=1
 last_client=kicad
 [pcbnew]
@@ -23,11 +23,14 @@ ModuleOutlineThickness=0.150000000000
 [cvpcb]
 version=1
 NetIExt=net
-[general]
-version=1
 [eeschema]
 version=1
 LibDir=libs
+NetFmtName=
+RptD_X=0
+RptD_Y=100
+RptLab=1
+LabSize=60
 [eeschema/libraries]
 LibName1=libs/conn
 LibName2=libs/device
@@ -38,3 +41,6 @@ LibName6=libs/msp430
 LibName7=libs/nrf24l01
 LibName8=libs/bat
 LibName9=libs/batn
+LibName10=MCP73831
+[general]
+version=1
