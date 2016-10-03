@@ -79,7 +79,7 @@ void nRF24L01_init(void)
 		dir[i] = 0xE7;
 	}
 	set_dir(TX_ADDR, dir, 5);
-	set_status(CONFIG, ~MASK_MAX_RT);			//activo la interrupcion por max envios, interrupcion activa por bajo
+	//set_status(CONFIG, ~MASK_MAX_RT);			//activo la interrupcion por max envios, interrupcion activa por bajo
 	set_status(CONFIG, ~MASK_TX_DS);			//activo la interrupcion por envio de paquete, interrupcion activa por bajo
 	set_status(CONFIG, PWR_UP);					// nRF en modo standby
 
@@ -158,20 +158,23 @@ void enviar_dato(uint16_t dat)
 {
 	uint8_t status;
 	CSN_EN;
-	__bis_SR_register(GIE);
+	spi_transfer(FLUSH_TX);
 	spi_transfer(W_TX_PAYLOAD);
 	spi_transfer16(dat);
 	CSN_DIS;
 	CE_EN;
-	__delay_cycles(DELAY_CYCLES_15US);
+	__delay_cycles(DELAY_CYCLES_130US);
 	CE_DIS;
-	__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS o MAX_TX_DS
+	__delay_cycles(DELAY_CYCLES_5MS);
+	//set_status(STATUS, TX_DS);
+	/*__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS o MAX_TX_DS
 	status = read_reg(STATUS);
 	if(status & TX_DS) {
 		set_status(STATUS, TX_DS); // se envió el paquete.
 	} else {
 		set_status(STATUS, MAX_RT); //aca se puede avisar o contar que no se envió el paquete, o algo.
 	}
+	*/
 }
 //Timer A0 interrupt service routine
 #pragma vector=TIMERA0_VECTOR
@@ -187,7 +190,7 @@ __interrupt void Timer_A (void)
 __interrupt void ADC10 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
-	ADC10CTL0 = SREF_0 + ADC10SHT_3 + ADC10ON + ADC10IE; //Vcc & Vss as reference
+	//ADC10CTL0 = SREF_0 + ADC10SHT_3 + ADC10ON + ADC10IE; //Vcc & Vss as reference
 	//P1OUT	^=	 BIT4;
 }
 
@@ -195,7 +198,7 @@ __interrupt void ADC10 (void)
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1 (void)
 {
-	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	//_BIC_SR(LPM3_EXIT); // despierta del LPM3
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
 	P1OUT	^=	 BIT4;
 }
