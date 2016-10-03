@@ -1,7 +1,11 @@
 ******************************************************************************
-                  MSP430 Linker PC v4.4.7                      
+                  MSP430 Linker PC v4.4.5                      
 ******************************************************************************
+<<<<<<< c215c298d8e74b38cc1ed896e3323231dab5f8fc
 >> Linked Sun Oct 02 21:04:07 2016
+=======
+>> Linked Sat Sep 17 10:00:39 2016
+>>>>>>> c60036372c7da3285b7ee33ee6377e18a287a9c3
 
 OUTPUT FILE NAME:   <RX.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs_noexit"  address: 0000fa88

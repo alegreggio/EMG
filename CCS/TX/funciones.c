@@ -28,8 +28,12 @@ void conf_IO(void)
 {
 	P1SEL  	&= 	~(BIT1 + BIT2 + BIT3 + BIT4 + BIT5 + BIT6 + BIT7); //con un 0 en el bit configuro el pin como GPIO
 	P1DIR	|=  BIT1 + BIT2 + BIT4 + BIT5 + BIT6; //los demas como entrada (0)
+
+	P1REN |= BIT3;                 // Enable internal pull-up/down resistors
+	//P1OUT |= BIT3;                 //Select pull-up mode for P1.3
+
 	P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
-	P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
+	//P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
 	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado
 	P1OUT	&=	~BIT4;
@@ -154,6 +158,7 @@ void enviar_dato(uint16_t dat)
 {
 	uint8_t status;
 	CSN_EN;
+	__bis_SR_register(GIE);
 	spi_transfer(W_TX_PAYLOAD);
 	spi_transfer16(dat);
 	CSN_DIS;
@@ -167,6 +172,23 @@ void enviar_dato(uint16_t dat)
 	} else {
 		set_status(STATUS, MAX_RT); //aca se puede avisar o contar que no se envió el paquete, o algo.
 	}
+}
+//Timer A0 interrupt service routine
+#pragma vector=TIMERA0_VECTOR
+__interrupt void Timer_A (void)
+{
+	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	//P1OUT	^=	 BIT4;
+
+}
+
+//ADC interrupt service routine
+#pragma vector=ADC10_VECTOR
+__interrupt void ADC10 (void)
+{
+	_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	ADC10CTL0 = SREF_0 + ADC10SHT_3 + ADC10ON + ADC10IE; //Vcc & Vss as reference
+	//P1OUT	^=	 BIT4;
 }
 
 //Port 1.3 interrupt service routine
