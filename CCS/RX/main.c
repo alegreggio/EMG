@@ -6,6 +6,7 @@
  */
 
 uint16_t dato;
+uint16_t mensaje;
 
 void main(void) {
 
@@ -15,17 +16,25 @@ void main(void) {
 	conf_USI   		();                // Configura USCI_B0 --> SPI
 	nRF24L01_init 	();				   // Configura nRF24L01+
 	//P1OUT	^=	 BIT0;
+	CE_EN;
+	mensaje=0x0000;
 	while (1)
 	{
-		CE_EN;
-		while (!flag_RX());
+
+		mensaje = read_reg(STATUS);
+		mensaje &= RX_DR;
 		dato = 0x0000;
-		CE_DIS;
-		spi_transfer (R_RX_PAYLOAD);
-		dato = spi_transfer16 (NOP16);
-		//preguntar si hay mas en la FIFO?
-		set_status (STATUS , ~RX_DR);
-		P1OUT	^=	 BIT0;
+
+		if(mensaje==0x0040){
+			CE_DIS;
+			spi_transfer (R_RX_PAYLOAD);
+			dato = spi_transfer16 (NOP16);
+			//preguntar si hay mas en la FIFO?
+			set_status (STATUS , RX_DR);
+			P1OUT	^=	BIT0;
+			CE_EN;
+		}
+
 	}
 
 	

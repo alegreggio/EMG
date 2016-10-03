@@ -26,8 +26,8 @@ void conf_IO(void)
 {
 	P1SEL  	&= 	~(BIT0 + BIT1 + BIT2 + BIT3 + BIT4 + BIT5 + BIT6 + BIT7); //con un 0 en el bit configuro el pin como GPIO
 	P1DIR	|=  BIT0 + BIT1 + BIT2 + BIT5 + BIT6; //los demas como entrada (0)
-	P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
-	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
+	//P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
+	//P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
 	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado
 }
 
@@ -73,6 +73,7 @@ void nRF24L01_init(void)
 		dir[i] = 0xE7;
 	}
 	set_dir(RX_ADDR_P0, dir, 5);
+	set_status(CONFIG, MASK_RX_DR);				//desactivo la interrupción en IRQ
 	set_status(CONFIG, PWR_UP);					// nRF en modo standby
 
 }
