@@ -67,20 +67,22 @@ void conf_TA0(void)
 
 void nRF24L01_init(void)
 {
-	set_status(EN_AA, ENAA_P0);					//enable auto-ack para pipe0
+	set_status(EN_AA, ~ENAA_P0);					//enable auto-ack para pipe0
 	set_status(EN_RXADDR, ERX_P0);				//enable datapipe 0
 	set_status(SETUP_AW, 0x03);					//address width de 5 bytes (en el receptor deben se igual)
-	set_status(RF_CH, 0x05);					//configuramos la frecuencia en 2,405 GHz
+	set_status(RF_CH, 0x01);					//configuramos la frecuencia en 2,405 GHz
 	set_status(RF_SETUP, RF_PWR1 );				//0dBm y 2Mbps
 	set_status(RF_SETUP, RF_PWR2 );				//0dBm y 2Mbps
+	set_status(RF_SETUP, ~RF_DR );				//0dBm y 2Mbps
 	static uint8_t dir [5] = {0};
 	for( i=0 ; i<5 ; i++)
 	{
 		dir[i] = 0xE7;
 	}
 	set_dir(TX_ADDR, dir, 5);
+	set_status(RX_PW_P0, 0x02);
 	//set_status(CONFIG, ~MASK_MAX_RT);			//activo la interrupcion por max envios, interrupcion activa por bajo
-	set_status(CONFIG, ~MASK_TX_DS);			//activo la interrupcion por envio de paquete, interrupcion activa por bajo
+	//set_status(CONFIG, ~MASK_TX_DS);			//activo la interrupcion por envio de paquete, interrupcion activa por bajo
 	set_status(CONFIG, PWR_UP);					// nRF en modo standby
 
 }
@@ -159,14 +161,28 @@ void enviar_dato(uint16_t dat)
 	uint8_t status;
 	CSN_EN;
 	spi_transfer(FLUSH_TX);
+
 	spi_transfer(W_TX_PAYLOAD);
 	spi_transfer16(dat);
+	uint8_t i=payload_size-2;//definir data_len
+	while(i){
+		spi_transfer(0x00);
+		i--;
+	}
 	CSN_DIS;
 	CE_EN;
-	__delay_cycles(DELAY_CYCLES_130US);
+	__delay_cycles(DELAY_CYCLES_15US);
 	CE_DIS;
-	__delay_cycles(DELAY_CYCLES_5MS);
-	//set_status(STATUS, TX_DS);
+	//__delay_cycles(DELAY_CYCLES_5MS);
+	status = read_reg(STATUS);
+	status=status & TX_DS;
+	while(status != TX_DS){
+		status = read_reg(STATUS);
+		status=status & TX_DS;
+	}
+	//CE_DIS;
+	set_status(STATUS, TX_DS);
+	set_status(STATUS, MAX_RT); //aca se puede avisar o contar que no se envió el paquete, o algo.
 	/*__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS o MAX_TX_DS
 	status = read_reg(STATUS);
 	if(status & TX_DS) {

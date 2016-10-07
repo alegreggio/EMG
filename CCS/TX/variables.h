@@ -12,11 +12,12 @@
 
 uint16_t dat;
 
-
 //Settings for 1MHz MCLK.
 #define DELAY_CYCLES_5MS       	5000
 #define DELAY_CYCLES_130US     	130
 #define DELAY_CYCLES_15US      	15
+
+#define payload_size			32
 
 #define W_REGISTER				0x20
 #define R_REGISTER				0x00
