@@ -573,10 +573,8 @@ Text HLabel 3000 1850 0    60   Input ~ 0
 E1
 Text HLabel 3000 3550 0    60   Input ~ 0
 E2
-Text HLabel 3000 5550 0    60   Input ~ 0
+Text HLabel 3000 4500 0    60   Input ~ 0
 DRL
-Wire Wire Line
-	3000 5550 4200 5550
 Wire Wire Line
 	3000 3550 3350 3550
 Wire Wire Line
@@ -621,4 +619,6 @@ Wire Wire Line
 Text HLabel 8400 3250 2    60   Input ~ 0
 Vout
 Connection ~ 8050 3250
+Wire Wire Line
+	3000 4500 3500 4500
 $EndSCHEMATC
