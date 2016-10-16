@@ -33,11 +33,18 @@ void conf_IO(void)
 
 void conf_USI(void)
 {
-	USICTL0		= USIPE5 + USIMST + USIOE + USISWRST + USIPE6 + USIPE7;
-	USICTL1 	= USICKPH + USIIE;
-	USICKCTL 	= USIDIV_0 + USISSEL_2;
+	USICTL1 	&= ~USII2C; // Funcionamiento en modo SPI
+	USICTL0		|= USIMST; //Funcionamiento en modo master
+	USICTL1 	&= ~USIIFGCC; // Resetea USIIFG cuando USICNT llega a 0
+	USICTL0		|= USISWRST; // Software reset
+	USICTL0		|= USIPE5 + USIPE6 + USIPE7; // Activa funcionalidad de los puertos (P1.5->SCLK, P1.6->SDO, P1.7->SDI)
+	USICTL0		|= USIOE;
+	USICTL1 	|= USIIE;
+	USICKCTL 	|= USIDIV_2 + USISSEL_2; // SMCLK como clock source (no usar sin "_" porque son otros macros, ver user's guide)
+	USICKCTL	&= ~USICKPL; // Nivel inactivo en bajo
+	USICTL1		|= USICKPH; // Captura en flanco ascendente y cambia en descendente
 	USISR		= 0x0000;
-	USICTL0		&= ~USISWRST;
+	USICTL0 	&= ~USISWRST;
 	USICTL1 	&= ~USIIFG;
 
 }
@@ -59,11 +66,12 @@ void conf_TA0(void)
 void nRF24L01_init(void)
 {
 	set_status(CONFIG, PRIM_RX);				// nRF en modo RX
-	set_status(EN_AA, ENAA_P0);					//enable auto-ack para pipe0
+	set_status(EN_AA, ~ENAA_P0);					//enable auto-ack para pipe0
 	set_status(EN_RXADDR, ERX_P0);				//enable datapipe 0
 	set_status(EN_RXADDR, ~ERX_P1);				//disable datapipe 1
 	set_status(SETUP_AW, 0x03);					//address width de 5 bytes (en el transmisor debe ser igual)
-	set_status(RF_CH, 0x05);					//configuramos la frecuencia en 2,405 GHz
+	set_status(RF_CH, 0x01);					//configuramos la frecuencia en 2,401 GHz
+	set_status(RF_SETUP, ~RF_DR );				//0dBm y 2Mbps
 	set_status(RF_SETUP, RF_PWR1 );				//0dBm y 2Mbps
 	set_status(RF_SETUP, RF_PWR2 );				//0dBm y 2Mbps
 	//static uint8_t l_addr = 5;				//Problemas con la declaración de l_addr y el vector dir
@@ -73,7 +81,8 @@ void nRF24L01_init(void)
 		dir[i] = 0xE7;
 	}
 	set_dir(RX_ADDR_P0, dir, 5);
-	set_status(CONFIG, MASK_RX_DR);				//desactivo la interrupción en IRQ
+	set_status(RX_PW_P0, 0x02);					//datos de 2 bytes
+	//set_status(CONFIG, MASK_RX_DR);				//desactivo la interrupción en IRQ
 	set_status(CONFIG, PWR_UP);					// nRF en modo standby
 
 }
