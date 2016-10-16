@@ -10,6 +10,7 @@
 
 
 //Settings for 1MHz MCLK.
+#define DELAY_CYCLES_100MS		100000
 #define DELAY_CYCLES_5MS       	5000
 #define DELAY_CYCLES_130US     	130
 #define DELAY_CYCLES_15US      	15
