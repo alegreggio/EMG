@@ -42,9 +42,16 @@ void conf_IO(void)
 
 void conf_USI(void)
 {
-	USICTL0		= USIPE5 + USIMST + USIOE + USISWRST + USIPE6 + USIPE7;
-	USICTL1 	= USICKPH + USIIE;
-	USICKCTL 	= USIDIV_0 + USISSEL_2;
+	USICTL1 	&= ~USII2C; // Funcionamiento en modo SPI
+	USICTL0		|= USIMST; //Funcionamiento en modo master
+	USICTL1 	&= ~USIIFGCC; // Resetea USIIFG cuando USICNT llega a 0
+	USICTL0		|= USISWRST; // Software reset
+	USICTL0		|= USIPE5 + USIPE6 + USIPE7; // Activa funcionalidad de los puertos (P1.5->SCLK, P1.6->SDO, P1.7->SDI)
+	USICTL0		|= USIOE;
+	USICTL1 	|= USIIE;
+	USICKCTL 	|= USIDIV_0 + USISSEL_2; // SMCLK como clock source (no usar sin "_" porque son otros macros, ver user's guide)
+	USICKCTL	&= ~USICKPL; // Nivel inactivo en bajo
+	USICTL1		|= USICKPH; // Captura en flanco ascendente y cambia en descendente
 	USISR		= 0x0000;
 	USICTL0 	&= ~USISWRST;
 	USICTL1 	&= ~USIIFG;
@@ -67,7 +74,7 @@ void conf_TA0(void)
 
 void nRF24L01_init(void)
 {
-	set_status(EN_AA, ~ENAA_P0);					//enable auto-ack para pipe0
+	set_status(EN_AA, ~ENAA_P0);				//enable auto-ack para pipe0
 	set_status(EN_RXADDR, ERX_P0);				//enable datapipe 0
 	set_status(SETUP_AW, 0x03);					//address width de 5 bytes (en el receptor deben se igual)
 	set_status(RF_CH, 0x01);					//configuramos la frecuencia en 2,405 GHz
@@ -164,11 +171,11 @@ void enviar_dato(uint16_t dat)
 
 	spi_transfer(W_TX_PAYLOAD);
 	spi_transfer16(dat);
-	uint8_t i=payload_size-2;//definir data_len
+	/*uint8_t i=payload_size-2;//definir data_len
 	while(i){
 		spi_transfer(0x00);
 		i--;
-	}
+	}*/
 	CSN_DIS;
 	CE_EN;
 	__delay_cycles(DELAY_CYCLES_15US);
