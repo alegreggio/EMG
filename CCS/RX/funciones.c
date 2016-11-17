@@ -125,9 +125,9 @@ void write_reg(uint8_t registro, uint8_t valor)
 	registro = registro | W_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
-	__delay_cycles(DELAY_CYCLES_5MS);
 	spi_transfer(valor);
 	CSN_DIS;
+	__delay_cycles(DELAY_CYCLES_5MS);
 }
 
 uint8_t read_reg(uint8_t registro)
@@ -136,9 +136,9 @@ uint8_t read_reg(uint8_t registro)
 	registro = registro | R_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
-	__delay_cycles(DELAY_CYCLES_5MS);
 	ret = spi_transfer(NOP);
 	CSN_DIS;
+	__delay_cycles(DELAY_CYCLES_5MS);
 	return ret;
 }
 
