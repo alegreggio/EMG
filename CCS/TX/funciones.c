@@ -49,7 +49,7 @@ void conf_USI(void)
 	USICTL0		|= USIPE5 + USIPE6 + USIPE7; // Activa funcionalidad de los puertos (P1.5->SCLK, P1.6->SDO, P1.7->SDI)
 	USICTL0		|= USIOE;
 	USICTL1 	|= USIIE;
-	USICKCTL 	|= USIDIV_0 + USISSEL_2; // SMCLK como clock source (no usar sin "_" porque son otros macros, ver user's guide)
+	USICKCTL 	|= USIDIV_2 + USISSEL_2; // SMCLK como clock source (no usar sin "_" porque son otros macros, ver user's guide)
 	USICKCTL	&= ~USICKPL; // Nivel inactivo en bajo
 	USICTL1		|= USICKPH; // Captura en flanco ascendente y cambia en descendente
 	USISR		= 0x0000;
@@ -131,9 +131,9 @@ void write_reg(uint8_t registro, uint8_t valor)
 	registro = registro | W_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
-	__delay_cycles(DELAY_CYCLES_15US);
 	spi_transfer(valor);
 	CSN_DIS;
+	__delay_cycles(DELAY_CYCLES_5MS);
 }
 
 uint8_t read_reg(uint8_t registro)
@@ -142,9 +142,9 @@ uint8_t read_reg(uint8_t registro)
 	registro = registro | R_REGISTER;
 	CSN_EN;
 	spi_transfer(registro);
-	__delay_cycles(DELAY_CYCLES_15US);
 	ret = spi_transfer(NOP);
 	CSN_DIS;
+	__delay_cycles(DELAY_CYCLES_5MS);
 	return ret;
 }
 
@@ -166,6 +166,7 @@ void set_status(uint8_t registro, uint8_t parametro)
 void enviar_dato(uint16_t dat)
 {
 	uint8_t status;
+	set_status(CONFIG, ~PRIM_RX);
 	CSN_EN;
 	spi_transfer(FLUSH_TX);
 
