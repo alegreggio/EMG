@@ -76,7 +76,7 @@ void nRF24L01_init(void)
 	set_status(RF_SETUP, RF_PWR2 );				//0dBm y 2Mbps
 	//static uint8_t l_addr = 5;				//Problemas con la declaración de l_addr y el vector dir
 	static uint8_t dir[5] = {0};
-	for(i=1; i<5; i++)
+	for(i=0; i<5; i++)
 	{
 		dir[i] = 0xE7;
 	}
