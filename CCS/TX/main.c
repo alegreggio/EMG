@@ -16,6 +16,20 @@ void main(void) {
 	//conf_ADC10 		();				   // Configura ADC10 ( P1.4 como entrada )
 	//conf_TA0		();				   // Configura TimerA TA0
 
+	volatile uint8_t estado;
+	/*estado = read_reg(CONFIG);
+	if (estado == 0x1A){
+		P1OUT	^=	 BIT4;
+		__delay_cycles(DELAY_CYCLES_100MS);
+		P1OUT	^=	 BIT4;
+
+	}*/
+
+	estado = read_reg(SETUP_AW);
+	//write_reg(STATUS,0x70);
+
+	//nRF24L01_init 	();				   // Configura nRF24L01+
+
 
 	while (1)
 	{

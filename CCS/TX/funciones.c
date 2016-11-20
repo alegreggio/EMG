@@ -33,7 +33,7 @@ void conf_IO(void)
 	//P1OUT |= BIT3;                 //Select pull-up mode for P1.3
 
 	P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
-	//P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
+	P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
 	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado
 	P1OUT	&=	~BIT4;
@@ -44,7 +44,7 @@ void conf_USI(void)
 {
 	USICTL1 	&= ~USII2C; // Funcionamiento en modo SPI
 	USICTL0		|= USIMST; //Funcionamiento en modo master
-	USICTL1 	&= ~USIIFGCC; // Resetea USIIFG cuando USICNT llega a 0
+	//USICTL1 	&= ~USIIFGCC; // Resetea USIIFG cuando USICNT llega a 0
 	USICTL0		|= USISWRST; // Software reset
 	USICTL0		|= USIPE5 + USIPE6 + USIPE7; // Activa funcionalidad de los puertos (P1.5->SCLK, P1.6->SDO, P1.7->SDI)
 	USICTL0		|= USIOE;
@@ -52,7 +52,8 @@ void conf_USI(void)
 	USICKCTL 	|= USIDIV_2 + USISSEL_2; // SMCLK como clock source (no usar sin "_" porque son otros macros, ver user's guide)
 	USICKCTL	&= ~USICKPL; // Nivel inactivo en bajo
 	USICTL1		|= USICKPH; // Captura en flanco ascendente y cambia en descendente
-	USISR		= 0x0000;
+	USICNT		&= ~USI16B;
+	//USISR		= 0x0000;
 	USICTL0 	&= ~USISWRST;
 	USICTL1 	&= ~USIIFG;
 
@@ -74,7 +75,7 @@ void conf_TA0(void)
 
 void nRF24L01_init(void)
 {
-	set_status(EN_AA, ~ENAA_P0);				//enable auto-ack para pipe0
+	set_status(EN_AA, ~ENAA_P0);				//~enable auto-ack para pipe0
 	set_status(EN_RXADDR, ERX_P0);				//enable datapipe 0
 	set_status(SETUP_AW, 0x03);					//address width de 5 bytes (en el receptor deben se igual)
 	set_status(RF_CH, 0x01);					//configuramos la frecuencia en 2,405 GHz
@@ -88,8 +89,8 @@ void nRF24L01_init(void)
 	}
 	set_dir(TX_ADDR, dir, 5);
 	set_status(RX_PW_P0, 0x02);
-	//set_status(CONFIG, ~MASK_MAX_RT);			//activo la interrupcion por max envios, interrupcion activa por bajo
-	//set_status(CONFIG, ~MASK_TX_DS);			//activo la interrupcion por envio de paquete, interrupcion activa por bajo
+	set_status(CONFIG, MASK_MAX_RT);			//desactivo la interrupcion por max envios, interrupcion activa por bajo
+	set_status(CONFIG, ~MASK_TX_DS);			//activo la interrupcion por envio de paquete, interrupcion activa por bajo
 	set_status(CONFIG, PWR_UP);					// nRF en modo standby
 
 }
@@ -123,7 +124,9 @@ uint16_t spi_transfer16(uint16_t dato)
 	USICNT 	= 16 | USI16B;
 	while ( !(USICTL1 & USIIFG) );
 	USICTL1 &= ~USIIFG;
-	return USISR;
+	dato	=	USISR;
+	USICNT 	&= ~USI16B;
+	return dato;
 }
 
 void write_reg(uint8_t registro, uint8_t valor)
@@ -166,32 +169,40 @@ void set_status(uint8_t registro, uint8_t parametro)
 void enviar_dato(uint16_t dat)
 {
 	uint8_t status;
-	set_status(CONFIG, ~PRIM_RX);
+	volatile uint8_t estado;
 	CSN_EN;
 	spi_transfer(FLUSH_TX);
+	CSN_DIS;
+	estado = read_reg(FIFO_STATUS);
+	estado = read_reg(FIFO_STATUS);
 
+	CSN_EN;
 	spi_transfer(W_TX_PAYLOAD);
 	spi_transfer16(dat);
-	/*uint8_t i=payload_size-2;//definir data_len
-	while(i){
-		spi_transfer(0x00);
-		i--;
-	}*/
 	CSN_DIS;
+
+	estado = read_reg(FIFO_STATUS);
+	estado = read_reg(FIFO_STATUS);
+
 	CE_EN;
 	__delay_cycles(DELAY_CYCLES_15US);
 	CE_DIS;
-	//__delay_cycles(DELAY_CYCLES_5MS);
+
+	//__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS
+
+	__delay_cycles(DELAY_CYCLES_5MS);
 	status = read_reg(STATUS);
 	status=status & TX_DS;
 	while(status != TX_DS){
 		status = read_reg(STATUS);
 		status=status & TX_DS;
 	}
+	write_reg(STATUS,0x70);
+	/*
 	//CE_DIS;
 	set_status(STATUS, TX_DS);
 	set_status(STATUS, MAX_RT); //aca se puede avisar o contar que no se envió el paquete, o algo.
-	/*__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS o MAX_TX_DS
+	__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS o MAX_TX_DS
 	status = read_reg(STATUS);
 	if(status & TX_DS) {
 		set_status(STATUS, TX_DS); // se envió el paquete.
@@ -199,6 +210,8 @@ void enviar_dato(uint16_t dat)
 		set_status(STATUS, MAX_RT); //aca se puede avisar o contar que no se envió el paquete, o algo.
 	}
 	*/
+	//write_reg(STATUS,0x70);
+
 }
 //Timer A0 interrupt service routine
 #pragma vector=TIMERA0_VECTOR
@@ -222,7 +235,7 @@ __interrupt void ADC10 (void)
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1 (void)
 {
-	//_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	_BIC_SR(LPM3_EXIT); // despierta del LPM3
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
 	P1OUT	^=	 BIT4;
 }
