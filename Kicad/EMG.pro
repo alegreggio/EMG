@@ -1,4 +1,4 @@
-update=03/10/2016 07:29:04 p.m.
+update=22/11/2016 01:45:11 p.m.
 version=1
 last_client=kicad
 [pcbnew]
@@ -23,8 +23,6 @@ ModuleOutlineThickness=0.150000000000
 [cvpcb]
 version=1
 NetIExt=net
-[general]
-version=1
 [eeschema]
 version=1
 LibDir=libs
@@ -41,3 +39,5 @@ LibName9=libs/batn
 LibName10=MCP73831
 LibName11=libs/maxim
 LibName12=libs/max8881
+[general]
+version=1
