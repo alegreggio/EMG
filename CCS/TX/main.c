@@ -13,31 +13,20 @@ void main(void) {
 	conf_IO       	();                // Configura Entradas/Salidas
 	conf_USI   		();                // Configura USCI_B0 --> SPI
 	nRF24L01_init 	();				   // Configura nRF24L01+
-	//conf_ADC10 		();				   // Configura ADC10 ( P1.4 como entrada )
+	conf_ADC10 		();				   // Configura ADC10 ( P1.4 como entrada )
 	//conf_TA0		();				   // Configura TimerA TA0
 
 	volatile uint8_t estado;
-	/*estado = read_reg(CONFIG);
-	if (estado == 0x1A){
-		P1OUT	^=	 BIT4;
-		__delay_cycles(DELAY_CYCLES_100MS);
-		P1OUT	^=	 BIT4;
-
-	}*/
-
 	estado = read_reg(SETUP_AW);
-	//write_reg(STATUS,0x70);
-
-	//nRF24L01_init 	();				   // Configura nRF24L01+
 
 
 	while (1)
 	{
 		//__bis_SR_register(LPM3_bits + GIE);
-		//ADC10CTL0 |= ENC + ADC10SC; // Sampling and conversion start
+		ADC10CTL0 |= ENC + ADC10SC; // Sampling and conversion start
 		//__bis_SR_register(LPM3_bits + GIE);
-
-		dat = 5;//ADC10MEM;
+		__delay_cycles(DELAY_CYCLES_5MS);
+		dat = ADC10MEM;
 		P1OUT	^=	 BIT4;
 		enviar_dato(dat);
 		__delay_cycles(50000);

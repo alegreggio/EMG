@@ -61,9 +61,9 @@ void conf_USI(void)
 
 void conf_ADC10(void)
 {
-	ADC10CTL1 = INCH_0 + ADC10DIV_0 + ADC10SSEL1 ; // Channel 0, ADC10CLK = MCLK
-	ADC10CTL0 = SREF_0 + ADC10SHT_3 + ADC10ON + ADC10IE; //Vcc & Vss as reference
-	ADC10AE0 |= BIT0; //P1.0 ADC option
+	ADC10CTL1 = INCH_10 + ADC10DIV_0 + ADC10SSEL1 ; // Input=temp sensor, Channel 0, ADC10CLK = MCLK (DIVIDER = 0)
+	ADC10CTL0 = SREF_0 + ADC10SHT_0  + ADC10ON; //Vcc & Vss as reference, ADC10 sample-and-hold time = 4 × ADC10CLKs
+	//ADC10AE0 |= BIT0; //P1.0 ADC option
 }
 
 void conf_TA0(void)
@@ -227,7 +227,7 @@ __interrupt void Timer_A (void)
 __interrupt void ADC10 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
-	//ADC10CTL0 = SREF_0 + ADC10SHT_3 + ADC10ON + ADC10IE; //Vcc & Vss as reference
+	ADC10CTL0 = SREF_0 + ADC10SHT_0 + ADC10IE + ADC10ON; //Vcc & Vss as reference, ADC10 sample-and-hold time = 4 × ADC10CLKs
 	//P1OUT	^=	 BIT4;
 }
 
