@@ -32,8 +32,8 @@ void conf_IO(void)
 	P1REN |= BIT3;                 // Enable internal pull-up/down resistors
 	//P1OUT |= BIT3;                 //Select pull-up mode for P1.3
 
-	P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
-	P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
+	//P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
+	//P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
 	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado
 	P1OUT	&=	~BIT4;
@@ -48,7 +48,7 @@ void conf_USI(void)
 	USICTL0		|= USISWRST; // Software reset
 	USICTL0		|= USIPE5 + USIPE6 + USIPE7; // Activa funcionalidad de los puertos (P1.5->SCLK, P1.6->SDO, P1.7->SDI)
 	USICTL0		|= USIOE;
-	USICTL1 	|= USIIE;
+	//USICTL1 	|= USIIE;
 	USICKCTL 	|= USIDIV_2 + USISSEL_2; // SMCLK como clock source (no usar sin "_" porque son otros macros, ver user's guide)
 	USICKCTL	&= ~USICKPL; // Nivel inactivo en bajo
 	USICTL1		|= USICKPH; // Captura en flanco ascendente y cambia en descendente
@@ -69,8 +69,8 @@ void conf_ADC10(void)
 void conf_TA0(void)
 {
 	TA0CCR0 = 10000;		                	// TAIFG on around ~ 3s
-	TA0CTL  = TASSEL_1 + MC_1 + TACLR;		// SMCLK, upmode, TA0 interrupt ON
-	TACCTL0 = CCIE;
+	TA0CTL  = TASSEL_1 + MC_1 + TACLR;			// SMCLK, upmode, TA0 interrupt disabled
+	TACCTL0 = CCIE;								//enable timer interrupt
 }
 
 void nRF24L01_init(void)
@@ -218,16 +218,15 @@ void enviar_dato(uint16_t dat)
 __interrupt void Timer_A (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
-	//P1OUT	^=	 BIT4;
-
+	TA0CTL  &= ~TAIFG;
 }
 
 //ADC interrupt service routine
 #pragma vector=ADC10_VECTOR
 __interrupt void ADC10 (void)
 {
-	_BIC_SR(LPM3_EXIT); // despierta del LPM3
-	ADC10CTL0 = SREF_0 + ADC10SHT_0 + ADC10IE + ADC10ON; //Vcc & Vss as reference, ADC10 sample-and-hold time = 4 × ADC10CLKs
+	//_BIC_SR(LPM3_EXIT); // despierta del LPM3
+	//ADC10CTL0 = SREF_0 + ADC10SHT_0 + ADC10IE + ADC10ON; //Vcc & Vss as reference, ADC10 sample-and-hold time = 4 × ADC10CLKs
 	//P1OUT	^=	 BIT4;
 }
 
