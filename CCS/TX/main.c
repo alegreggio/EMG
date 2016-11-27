@@ -24,7 +24,7 @@ void main(void) {
 	{
 		__bis_SR_register(LPM3_bits + GIE);		//entro en modo bajo consumo hasta que rebase el timer
 		ADC10CTL0 |= ENC + ADC10SC; 			//Sampling and conversion start
-		__delay_cycles(DELAY_CYCLES_5MS);
+		__bis_SR_register(LPM3_bits + GIE);		//entro en modo bajo consumo hasta que convierta el ADC
 		dat = ADC10MEM;
 		P1OUT	^=	 BIT4;
 		enviar_dato(dat);
