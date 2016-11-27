@@ -30,10 +30,10 @@ void conf_IO(void)
 	P1DIR	|=  BIT1 + BIT2 + BIT4 + BIT5 + BIT6; //los demas como entrada (0)
 
 	P1REN |= BIT3;                 // Enable internal pull-up/down resistors
-	//P1OUT |= BIT3;                 //Select pull-up mode for P1.3
+	P1OUT |= BIT3;                 //Select pull-up mode for P1.3
 
-	//P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
-	//P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
+	P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
+	P1IES 	|= 	BIT3;                    // P1.3 interrupt activa por flanco descendente
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
 	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado
 	P1OUT	&=	~BIT4;
@@ -188,9 +188,8 @@ void enviar_dato(uint16_t dat)
 	__delay_cycles(DELAY_CYCLES_15US);
 	CE_DIS;
 
-	//__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS
+	__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS
 
-	__delay_cycles(DELAY_CYCLES_5MS);
 	status = read_reg(STATUS);
 	status=status & TX_DS;
 	while(status != TX_DS){
@@ -198,21 +197,8 @@ void enviar_dato(uint16_t dat)
 		status=status & TX_DS;
 	}
 	write_reg(STATUS,0x70);
-	/*
-	//CE_DIS;
-	set_status(STATUS, TX_DS);
-	set_status(STATUS, MAX_RT); //aca se puede avisar o contar que no se envió el paquete, o algo.
-	__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS o MAX_TX_DS
-	status = read_reg(STATUS);
-	if(status & TX_DS) {
-		set_status(STATUS, TX_DS); // se envió el paquete.
-	} else {
-		set_status(STATUS, MAX_RT); //aca se puede avisar o contar que no se envió el paquete, o algo.
-	}
-	*/
-	//write_reg(STATUS,0x70);
-
 }
+
 //Timer A0 interrupt service routine
 #pragma vector=TIMERA0_VECTOR
 __interrupt void Timer_A (void)
@@ -236,6 +222,5 @@ __interrupt void Port_1 (void)
 {
 	_BIC_SR(LPM3_EXIT); // despierta del LPM3
 	P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
-	P1OUT	^=	 BIT4;
 }
 
