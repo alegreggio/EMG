@@ -26,6 +26,9 @@ void write_reg(uint8_t registro, uint8_t valor);
 uint8_t read_reg(uint8_t registro);
 void set_status(uint8_t registro, uint8_t parametro);
 void set_dir(uint8_t registro, uint8_t *valor, uint8_t len);
+void enviar_paq(void);
+void adc_sam16(void);
+
 
 
 

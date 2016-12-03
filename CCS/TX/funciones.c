@@ -8,6 +8,7 @@
 #include "funciones.h"
 #include "variables.h"
 
+uint16_t adc[16] = {0}; //Sets up an array of 32 integers and zero's the values
 
 uint8_t i	= 0;
 
@@ -61,9 +62,21 @@ void conf_USI(void)
 
 void conf_ADC10(void)
 {
-	ADC10CTL1 = INCH_10 + ADC10DIV_0 + ADC10SSEL1 ; // Input=temp sensor, Channel 0, ADC10CLK = MCLK (DIVIDER = 0)
-	ADC10CTL0 = SREF_0 + ADC10SHT_0  + ADC10ON + ADC10IE; //Vcc & Vss as reference, ADC10 sample-and-hold time = 4 × ADC10CLKs
+	//ADC10CTL1 = INCH_10 + ADC10DIV_0 + ADC10SSEL1 ; // Input=temp sensor, Channel 0, ADC10CLK = MCLK (DIVIDER = 0)
+	//ADC10CTL0 = SREF_0 + ADC10SHT_0  + ADC10ON + ADC10IE; //Vcc & Vss as reference, ADC10 sample-and-hold time = 4 × ADC10CLKs
 	//ADC10AE0 |= BIT0; //P1.0 ADC option
+	ADC10CTL1 = INCH_10 + ADC10DIV_0 + ADC10SSEL1 + CONSEQ_2; 	// Input=temp sensor, Channel 0, ADC10CLK = MCLK (DIVIDER = 0), Repeat-SingleChannel
+	ADC10CTL0 = SREF_0 + ADC10SHT_0  + ADC10ON + ADC10IE + MSC; //Vcc & Vss as reference, ADC10 sample-and-hold time = 4 × ADC10CLKs, Multiple Sample Conversion
+	ADC10DTC1 = 0x10;											// 32 conversions
+}
+
+void adc_sam16(void)
+{
+    ADC10CTL0 &= ~ENC;				// Disable Conversion
+    while (ADC10CTL1 & BUSY);		// Wait if ADC10 busy
+    ADC10SA = (int)adc;				// Transfers data to next array (DTC auto increments address)
+    ADC10CTL0 |= ENC + ADC10SC;		// Enable Conversion and conversion start
+    __bis_SR_register(LPM3 + GIE);// Low Power Mode 0, ADC10_ISR
 }
 
 void conf_TA0(void)
@@ -88,7 +101,7 @@ void nRF24L01_init(void)
 		dir[i] = 0xE7;
 	}
 	set_dir(TX_ADDR, dir, 5);
-	set_status(RX_PW_P0, 0x02);
+	set_status(RX_PW_P0, 0x20);
 	set_status(CONFIG, MASK_MAX_RT);			//desactivo la interrupcion por max envios, interrupcion activa por bajo
 	set_status(CONFIG, ~MASK_TX_DS);			//activo la interrupcion por envio de paquete, interrupcion activa por bajo
 	set_status(CONFIG, PWR_UP);					// nRF en modo standby
@@ -173,16 +186,11 @@ void enviar_dato(uint16_t dat)
 	CSN_EN;
 	spi_transfer(FLUSH_TX);
 	CSN_DIS;
-	estado = read_reg(FIFO_STATUS);
-	estado = read_reg(FIFO_STATUS);
 
 	CSN_EN;
 	spi_transfer(W_TX_PAYLOAD);
 	spi_transfer16(dat);
 	CSN_DIS;
-
-	estado = read_reg(FIFO_STATUS);
-	estado = read_reg(FIFO_STATUS);
 
 	CE_EN;
 	__delay_cycles(DELAY_CYCLES_15US);
@@ -190,6 +198,34 @@ void enviar_dato(uint16_t dat)
 
 	__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS
 
+	status = read_reg(STATUS);
+	status=status & TX_DS;
+	while(status != TX_DS){
+		status = read_reg(STATUS);
+		status=status & TX_DS;
+	}
+	write_reg(STATUS,0x70);
+}
+
+void enviar_paq(void){
+	uint8_t status;
+	CSN_EN;
+	spi_transfer(FLUSH_TX);
+	CSN_DIS;
+
+	CSN_EN;
+	spi_transfer(W_TX_PAYLOAD);
+	for( i=0 ; i<16 ; i++ )
+	{
+		spi_transfer16(adc[i]);
+	}
+	CSN_DIS;
+
+	CE_EN;
+	__delay_cycles(DELAY_CYCLES_15US);
+	CE_DIS;
+
+	__bis_SR_register(LPM3_bits + GIE);//entro en LPM3 y espero la int por parte del nRF, sea TX_DS
 	status = read_reg(STATUS);
 	status=status & TX_DS;
 	while(status != TX_DS){
