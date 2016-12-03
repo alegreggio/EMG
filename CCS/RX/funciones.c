@@ -81,7 +81,7 @@ void nRF24L01_init(void)
 		dir[i] = 0xE7;
 	}
 	set_dir(RX_ADDR_P0, dir, 5);
-	set_status(RX_PW_P0, 0x02);					//datos de 2 bytes
+	set_status(RX_PW_P0, 0x20);					//datos de 32 bytes
 	//set_status(CONFIG, MASK_RX_DR);				//desactivo la interrupción en IRQ
 	set_status(CONFIG, PWR_UP);					// nRF en modo standby
 
