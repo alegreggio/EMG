@@ -569,16 +569,6 @@ Wire Wire Line
 Connection ~ 5000 5650
 Wire Wire Line
 	5250 5650 5250 5600
-Text HLabel 3000 1850 0    60   Input ~ 0
-E1
-Text HLabel 3000 3550 0    60   Input ~ 0
-E2
-Text HLabel 3000 4500 0    60   Input ~ 0
-DRL
-Wire Wire Line
-	3000 3550 3350 3550
-Wire Wire Line
-	3000 1850 3350 1850
 $Comp
 L R R20
 U 1 1 57DD7E0F
@@ -619,6 +609,29 @@ Wire Wire Line
 Text HLabel 8400 3250 2    60   Input ~ 0
 Vout
 Connection ~ 8050 3250
+$Comp
+L CONN_01X03 P5
+U 1 1 58A72533
+P 1780 3140
+F 0 "P5" H 1780 3340 50  0000 C CNN
+F 1 "CONN_01X03" V 1880 3140 50  0000 C CNN
+F 2 "" H 1780 3140 50  0000 C CNN
+F 3 "" H 1780 3140 50  0000 C CNN
+	1    1780 3140
+	-1   0    0    1   
+$EndComp
 Wire Wire Line
-	3000 4500 3500 4500
+	1980 3240 1980 4500
+Wire Wire Line
+	1980 4500 3500 4500
+Wire Wire Line
+	3350 3550 2355 3550
+Wire Wire Line
+	2355 3550 2355 3140
+Wire Wire Line
+	2355 3140 1980 3140
+Wire Wire Line
+	1980 3040 1980 1850
+Wire Wire Line
+	1980 1850 3350 1850
 $EndSCHEMATC
