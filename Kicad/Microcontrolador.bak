@@ -109,9 +109,61 @@ F 3 "" H 5550 2500 50  0000 C CNN
 	1    5550 2500
 	0    1    1    0   
 $EndComp
-NoConn ~ 4450 2750
 NoConn ~ 4450 3400
 NoConn ~ 4450 3600
-NoConn ~ 6350 2750
 NoConn ~ 6350 3300
+$Comp
+L CONN_01X05 P?
+U 1 1 58A7015B
+P 8635 3035
+F 0 "P?" H 8635 3335 50  0000 C CNN
+F 1 "CONN_01X05" V 8735 3035 50  0000 C CNN
+F 2 "" H 8635 3035 50  0000 C CNN
+F 3 "" H 8635 3035 50  0000 C CNN
+	1    8635 3035
+	1    0    0    -1  
+$EndComp
+Text GLabel 8160 2805 0    60   Input ~ 0
+TEST
+Wire Wire Line
+	8435 2835 8165 2835
+Wire Wire Line
+	8165 2835 8165 2805
+Wire Wire Line
+	8165 2805 8160 2805
+Text GLabel 6485 2750 2    60   Input ~ 0
+TEST
+Wire Wire Line
+	6350 2750 6485 2750
+Text GLabel 8120 2925 0    60   Input ~ 0
+RST
+Text GLabel 4450 2750 0    60   Input ~ 0
+RST
+Wire Wire Line
+	8120 2925 8435 2925
+Wire Wire Line
+	8435 2925 8435 2935
+Text HLabel 8150 3035 0    60   Input ~ 0
+CSN
+Wire Wire Line
+	8435 3035 8150 3035
+Text HLabel 8150 3135 0    60   Input ~ 0
+CE
+$Comp
+L VCC #PWR?
+U 1 1 58A7094B
+P 8300 3240
+F 0 "#PWR?" H 8300 3090 50  0001 C CNN
+F 1 "VCC" H 8300 3390 50  0000 C CNN
+F 2 "" H 8300 3240 50  0000 C CNN
+F 3 "" H 8300 3240 50  0000 C CNN
+	1    8300 3240
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	8435 3235 8300 3235
+Wire Wire Line
+	8300 3235 8300 3240
+Wire Wire Line
+	8150 3135 8435 3135
 $EndSCHEMATC
