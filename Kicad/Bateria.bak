@@ -27,17 +27,6 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L BAT P2
-U 1 1 57DDA8B8
-P 5250 3650
-F 0 "P2" H 5250 3750 50  0000 C CNN
-F 1 "BAT" H 5250 3550 50  0000 C CNN
-F 2 "EMG:Pin_Header_Straight_1x02_Pitch2.54mm" H 5250 2450 50  0001 C CNN
-F 3 "" H 5250 2450 50  0000 C CNN
-	1    5250 3650
-	1    0    0    -1  
-$EndComp
-$Comp
 L +BATT #PWR021
 U 1 1 57DDA8D2
 P 4400 3650
@@ -70,4 +59,19 @@ F 3 "" H 4700 3650 50  0000 C CNN
 	1    4700 3650
 	1    0    0    -1  
 $EndComp
+$Comp
+L CONN_01X02 P2
+U 1 1 58BC865C
+P 5250 3450
+F 0 "P2" H 5250 3600 50  0000 C CNN
+F 1 "CONN_01X02" V 5350 3450 50  0000 C CNN
+F 2 "EMG:Pin_Header_Straight_1x02_Pitch2.54mm" H 5250 3450 50  0001 C CNN
+F 3 "" H 5250 3450 50  0000 C CNN
+	1    5250 3450
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5500 3650 5300 3650
+Wire Wire Line
+	5000 3650 5200 3650
 $EndSCHEMATC
