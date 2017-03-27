@@ -1,4 +1,4 @@
-(module usb_vert (layer F.Cu) (tedit 58A8CBA2)
+(module EMG:usb_vert (layer F.Cu) (tedit 58A8CBA2)
   (fp_text reference CON** (at 5.85 -2.67) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )
