@@ -1,4 +1,4 @@
-(module Pin_Headers:Pin_Header_Straight_1x08_Pitch1.27mm (layer F.Cu) (tedit 5862ED5A)
+(module EMG:Pin_Header_Straight_1x08_Pitch1.27mm (layer F.Cu) (tedit 5862ED5A)
   (descr "Through hole straight pin header, 1x08, 1.27mm pitch, single row")
   (tags "Through hole pin header THT 1x08 1.27mm single row")
   (fp_text reference REF** (at 0 -1.755) (layer F.SilkS)
@@ -29,7 +29,7 @@
   (pad 6 thru_hole oval (at 0 6.35) (size 1 1) (drill 0.65) (layers *.Cu *.Mask))
   (pad 7 thru_hole oval (at 0 7.62) (size 1 1) (drill 0.65) (layers *.Cu *.Mask))
   (pad 8 thru_hole oval (at 0 8.89) (size 1 1) (drill 0.65) (layers *.Cu *.Mask))
-  (model Pin_Headers.3dshapes/Pin_Header_Straight_1x08_Pitch1.27mm.wrl
+  (model C:/Users/Alejandro/Desktop/Repo/EMG/Kicad/EMG.3Dshapes/Pin_Header_Straight_1x08_Pitch1.27mm.wrl
     (at (xyz 0 0 0))
     (scale (xyz 1 1 1))
     (rotate (xyz 0 0 0))
