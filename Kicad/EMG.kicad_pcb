@@ -1,9 +1,9 @@
-(kicad_pcb (version 4) (host pcbnew 4.0.2-stable)
+(kicad_pcb (version 4) (host pcbnew 4.0.4-stable)
 
   (general
     (links 100)
     (no_connects 0)
-    (area 139.924999 119.044999 172.075001 154.195001)
+    (area 139.71 116.605897 174.361905 161.945001)
     (thickness 1.6)
     (drawings 4)
     (tracks 450)
@@ -1993,9 +1993,9 @@
     (pad 7 thru_hole oval (at -4.55 0.89 180) (size 1.4 1.95) (drill oval 0.6 1.15) (layers *.Cu *.Mask))
   )
 
-  (gr_line (start 140 154.12) (end 140 119.12) (layer Edge.Cuts) (width 0.15))
-  (gr_line (start 172 154.12) (end 140 154.12) (layer Edge.Cuts) (width 0.15))
-  (gr_line (start 172 119.12) (end 172 154.12) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 140 158) (end 140 119.12) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 172 158) (end 140 158) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 172 119.12) (end 172 158) (layer Edge.Cuts) (width 0.15))
   (gr_line (start 140 119.12) (end 172 119.12) (layer Edge.Cuts) (width 0.15))
 
   (segment (start 147.217709 131.679231) (end 147.217709 132.654231) (width 0.25) (layer F.Cu) (net 1))
