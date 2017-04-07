@@ -1,4 +1,4 @@
-(module sot23-6 (layer F.Cu)
+(module EMG:sot23-6 (layer F.Cu) (tedit 0)
   (descr SOT23-6)
   (fp_text reference SOT23-6 (at 0 -1.9812) (layer F.SilkS)
     (effects (font (size 0.50038 0.50038) (thickness 0.09906)))
@@ -25,6 +25,11 @@
   (pad 6 smd rect (at -0.9525 -1.05664) (size 0.59944 1.00076) (layers F.Cu F.Paste F.Mask))
   (pad 5 smd rect (at 0 -1.05664) (size 0.59944 1.00076) (layers F.Cu F.Paste F.Mask))
   (model walter/smd_trans/sot23-6.wrl
+    (at (xyz 0 0 0))
+    (scale (xyz 1 1 1))
+    (rotate (xyz 0 0 0))
+  )
+  (model ../../../../../../Users/Alejandro/Desktop/Repo/EMG/Kicad/EMG.3Dshapes/sot23-6.wrl
     (at (xyz 0 0 0))
     (scale (xyz 1 1 1))
     (rotate (xyz 0 0 0))
