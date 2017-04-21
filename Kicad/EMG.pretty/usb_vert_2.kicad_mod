@@ -1,4 +1,4 @@
-(module EMG:usb_vert (layer F.Cu) (tedit 58DEA9D6)
+(module usb_vert_2 (layer F.Cu) (tedit 58DEA9D6)
   (fp_text reference CON** (at 5.85 -2.67) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )
@@ -13,4 +13,9 @@
   (pad 6 thru_hole oval (at 2.8 -0.25 90) (size 1.1 1.8) (drill oval 0.5 1.2) (layers *.Cu *.Mask))
   (pad 6 thru_hole oval (at -2.8 -0.25 90) (size 1.1 1.8) (drill oval 0.5 1.2) (layers *.Cu *.Mask))
   (pad 6 thru_hole oval (at 0.05 1.91 90) (size 1.1 2.2) (drill oval 0.5 1.6) (layers *.Cu *.Mask))
+  (model ${KIPRJMOD}/EMG.3Dshapes/USB.wrl
+    (at (xyz 0 0.005 0.105))
+    (scale (xyz 0.4 0.4 0.4))
+    (rotate (xyz 0 180 180))
+  )
 )
