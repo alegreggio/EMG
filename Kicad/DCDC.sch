@@ -119,5 +119,7 @@ F 3 "" H 4500 3840 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4810 3540 4500 3540
+	4500 3540 4810 3540
+Wire Wire Line
+	4810 3540 4810 3760
 $EndSCHEMATC
