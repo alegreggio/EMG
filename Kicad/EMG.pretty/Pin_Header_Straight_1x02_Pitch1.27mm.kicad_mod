@@ -1,4 +1,4 @@
-(module Pin_Headers:Pin_Header_Straight_1x02_Pitch1.27mm (layer F.Cu) (tedit 58CD4ED0)
+(module Pin_Header_Straight_1x02_Pitch1.27mm (layer F.Cu) (tedit 58CD4ED0)
   (descr "Through hole straight pin header, 1x02, 1.27mm pitch, single row")
   (tags "Through hole pin header THT 1x02 1.27mm single row")
   (fp_text reference REF** (at 0 -1.695) (layer F.SilkS)
@@ -26,9 +26,9 @@
   )
   (pad 1 thru_hole rect (at 0 0) (size 1 1) (drill 0.65) (layers *.Cu *.Mask))
   (pad 2 thru_hole oval (at 0 1.27) (size 1 1) (drill 0.65) (layers *.Cu *.Mask))
-  (model ${KISYS3DMOD}/Pin_Headers.3dshapes/Pin_Header_Straight_1x02_Pitch1.27mm.wrl
-    (at (xyz 0 0 0))
-    (scale (xyz 1 1 1))
-    (rotate (xyz 0 0 0))
+  (model "${KIPRJMOD}/EMG.3Dshapes/user library-pin-header-1_27_1x2.wrl"
+    (at (xyz 0 -0.025 0))
+    (scale (xyz 0.4 0.4 0.4))
+    (rotate (xyz 0 0 90))
   )
 )
