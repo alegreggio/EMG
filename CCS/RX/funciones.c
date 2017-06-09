@@ -164,6 +164,3 @@ uint8_t flag_RX(void)
 	ret &= RX_DR;
 	return ret;
 }
-
-
-
