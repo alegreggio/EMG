@@ -24,11 +24,12 @@ void conf_CLK(void)
 
 void conf_IO(void)
 {
-	P1SEL  	&= 	~(BIT0 + BIT1 + BIT2 + BIT3 + BIT4 + BIT5 + BIT6 + BIT7); //con un 0 en el bit configuro el pin como GPIO
-	P1DIR	|=  BIT0 + BIT1 + BIT2 + BIT5 + BIT6; //los demas como entrada (0)
-	//P1IE 	|= 	BIT3;                    // P1.3 interrupt enabled
-	//P1IFG 	&= 	~BIT3;               // P1.3 IFG cleared
-	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado
+	P1SEL	|=  BIT4 + BIT5 + BIT6 + BIT7; //Pongo en 1 los pines del SPI del USCI_B0
+	P1SEL2	|=  BIT4 + BIT5 + BIT6 + BIT7; //Pongo en 1 los pines del SPI del USCI_B0
+
+	P1DIR	|=  BIT0 + BIT4 + BIT5 + BIT7//los demas como entrada (0); BIT0->LED; Los demás son STE, CLK y MOSI
+
+	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado (ver)
 }
 
 void conf_USI(void)
@@ -49,12 +50,12 @@ void conf_USI(void)
 
 }
 
-void conf_USCI_A(void) //UART
+void conf_USCI_A0(void) //UART
 {
 
 }
 
-void conf_USCI_B(void) //SPI
+void conf_USCI_B0(void) //SPI
 {
 	UCB0CTL0	|= UCSYNC + UCMODE_1 + UCMST + UCMSB + UCCKPH; //Modo sincrónico, 4-pin SPI con CSN activo por alto, Master
 

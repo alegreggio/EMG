@@ -16,7 +16,8 @@
 void conf_WDT(void);
 void conf_CLK(void);
 void conf_IO(void);
-void conf_USI(void);
+void conf_USCI_B0(void);
+void conf_USCI_A0(void);
 void conf_ADC10(void);
 void conf_TA0(void);
 void nRF24L01_init(void);

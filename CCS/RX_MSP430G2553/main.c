@@ -14,7 +14,8 @@ void main(void) {
 	conf_WDT      	();                // Configura WDT del sistema
 	conf_CLK      	();                // Configura CLK del sistema
 	conf_IO       	();                // Configura Entradas/Salidas
-	conf_USI   		();                // Configura USCI_B0 --> SPI
+	conf_USCI_A0   	();                // Configura USCI_A0 --> UART
+	conf_USCI_B0   	();                // Configura USCI_B0 --> SPI
 
 
 	nRF24L01_init 	();				   // Configura nRF24L01+
