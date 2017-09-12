@@ -29,35 +29,19 @@ void conf_IO(void)
 
 	P1DIR	|=  BIT0 + BIT4 + BIT5 + BIT7//los demas como entrada (0); BIT0->LED; Los demás son STE, CLK y MOSI
 
-	P1OUT	&=	~BIT1;						// nRF24L01+ desactivado (ver)
-}
-
-void conf_USI(void)
-{
-	USICTL1 	&= ~USII2C; // Funcionamiento en modo SPI
-	USICTL0		|= USIMST; //Funcionamiento en modo master
-	USICTL1 	&= ~USIIFGCC; // Resetea USIIFG cuando USICNT llega a 0
-	USICTL0		|= USISWRST; // Software reset
-	USICTL0		|= USIPE5 + USIPE6 + USIPE7; // Activa funcionalidad de los puertos (P1.5->SCLK, P1.6->SDO, P1.7->SDI)
-	USICTL0		|= USIOE;
-	USICTL1 	|= USIIE;
-	USICKCTL 	|= USIDIV_2 + USISSEL_2; // SMCLK como clock source (no usar sin "_" porque son otros macros, ver user's guide)
-	USICKCTL	&= ~USICKPL; // Nivel inactivo en bajo
-	USICTL1		|= USICKPH; // Captura en flanco ascendente y cambia en descendente
-	USISR		= 0x0000;
-	USICTL0 	&= ~USISWRST;
-	USICTL1 	&= ~USIIFG;
-
-}
-
-void conf_USCI_A0(void) //UART
-{
-
+	P1OUT	&=	~BIT4;						// nRF24L01+ desactivado (con el STE)
 }
 
 void conf_USCI_B0(void) //SPI
 {
 	UCB0CTL0	|= UCSYNC + UCMODE_1 + UCMST + UCMSB + UCCKPH; //Modo sincrónico, 4-pin SPI con CSN activo por alto, Master
+	UCB0CTL1	|= UCSSEL_2; //selecciono el SMCLK para el master
+	UCB0CTL1	&= ~USISWRST;// SPI activo
+	IE2			|= UCB0RXIE + UCB0TXIE;// int de transmisión y recepción activas
+}
+
+void conf_USCI_A0(void) //UART
+{
 
 }
 
