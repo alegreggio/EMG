@@ -1,0 +1,37 @@
+# Directorios ignorados
+CCS/.metadata/
+CCS/dvt/
+CCS/RemoteSystemsTempFiles/
+
+CCS/Interupcion/.launches/
+CCS/Interupcion/.settings/
+CCS/Interupcion/Debug/
+CCS/Interupcion/targetConfigs/
+
+CCS/RX/.launches/
+CCS/RX/.settings/
+CCS/RX/Debug/
+CCS/RX/targetConfigs/
+
+CCS/RX_MSP430G2553/.launches/
+CCS/RX_MSP430G2553/.settings/
+CCS/RX_MSP430G2553/Debug/
+CCS/RX_MSP430G2553/targetConfigs/
+
+CCS/timerA/.launches/
+CCS/timerA/.settings/
+CCS/timerA/Debug/
+CCS/timerA/targetConfigs/
+
+CCS/TX/.launches/
+CCS/TX/.settings/
+CCS/TX/Debug/
+CCS/TX/targetConfigs/
+
+CCS/Transmisor/.launches/
+CCS/Transmisor/.settings/
+CCS/Transmisor/Debug/
+CCS/Transmisor/targetConfigs/
+
+# Extensiones ignoradas
+*.metadata
